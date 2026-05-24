@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
+const verifyToken = require("../middleware/auth");
 
 // ✅ GET all buses
-router.get("/", (req, res) => {
+router.get("/", verifyToken, (req, res) => {
   const sql = "SELECT * FROM buses WHERE is_active = 1";
 
   db.query(sql, (err, result) => {
@@ -13,7 +14,7 @@ router.get("/", (req, res) => {
 });
 
 // ✅ ADD new bus
-router.post("/", (req, res) => {
+router.post("/", verifyToken, (req, res) => {
   const { bus_name, bus_code, description } = req.body;
 
   const sql = `
@@ -27,7 +28,7 @@ router.post("/", (req, res) => {
   });
 });
 
-router.get("/occupancy", (req, res) => {
+router.get("/occupancy", verifyToken, (req, res) => {
   console.log("Fetching bus occupancy data");
   const sql = `
    SELECT
@@ -51,7 +52,7 @@ GROUP BY b.id;
 });
 
 // ✅ Optional: GET single bus
-router.get("/:id", (req, res) => {
+router.get("/:id", verifyToken, (req, res) => {
   const sql = "SELECT * FROM buses WHERE id = ?";
 
   db.query(sql, [req.params.id], (err, result) => {

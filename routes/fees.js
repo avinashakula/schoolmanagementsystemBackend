@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
+const verifyToken = require("../middleware/auth");
 
-router.get("/payments/:studentId", (req, res) => {
+router.get("/payments/:studentId", verifyToken, (req, res) => {
   const sql = `
     SELECT *
     FROM student_fee_payments
@@ -16,7 +17,7 @@ router.get("/payments/:studentId", (req, res) => {
   });
 });
 
-router.post("/payments", (req, res) => {
+router.post("/payments", verifyToken, (req, res) => {
   const { student_id, amount, mode, description, type } = req.body;
 
   const sql = `
@@ -31,7 +32,7 @@ router.post("/payments", (req, res) => {
   });
 });
 
-router.get("/payments/summary/:studentId", (req, res) => {
+router.get("/payments/summary/:studentId", verifyToken, (req, res) => {
   const studentId = req.params.studentId;
 
   const sql = `
@@ -71,7 +72,7 @@ router.get("/payments/summary/:studentId", (req, res) => {
 });
 
 // ✅ GET fees by year
-router.get("/:year", (req, res) => {
+router.get("/:year", verifyToken, (req, res) => {
   const { year } = req.params;
 
   const sql = "SELECT * FROM fee_structure WHERE year = ?";
@@ -86,7 +87,7 @@ router.get("/:year", (req, res) => {
 });
 
 // ✅ SAVE / UPDATE fees
-router.post("/", (req, res) => {
+router.post("/", verifyToken, (req, res) => {
   const { data } = req.body;
 
   const sql = `
@@ -114,7 +115,7 @@ router.post("/", (req, res) => {
   });
 });
 
-router.get("/:year/:class", (req, res) => {
+router.get("/:year/:class", verifyToken, (req, res) => {
   const { year, class: studentClass } = req.params;
 
   const sql = "SELECT default_fee FROM fee_structure WHERE year=? AND class=?";

@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
+const verifyToken = require("../middleware/auth");
 
 // GET SUBJECTS
-router.get("/", (req, res) => {
+router.get("/", verifyToken, (req, res) => {
   db.query(
     "SELECT * FROM subjects ORDER BY subject_name ASC",
     (err, result) => {
@@ -20,7 +21,7 @@ router.get("/", (req, res) => {
 });
 
 // ADD SUBJECT
-router.post("/", (req, res) => {
+router.post("/", verifyToken, (req, res) => {
   const { subject_name } = req.body;
 
   db.query(
@@ -49,7 +50,7 @@ router.post("/", (req, res) => {
 });
 
 // FACULTY SUBJECT-WISE COUNT
-router.get("/faculty-count", (req, res) => {
+router.get("/faculty-count", verifyToken, (req, res) => {
   const sql = `
     SELECT subject, COUNT(*) as count
     FROM faculty

@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
+const verifyToken = require("../middleware/auth");
 
 // ✅ GET students by class
-router.get("/students/:className", (req, res) => {
+router.get("/students/:className", verifyToken, (req, res) => {
   const { className } = req.params;
 
   db.query(
@@ -35,7 +36,7 @@ router.get("/students/:className", (req, res) => {
 // });
 
 // ✅ GET attendance by date + class
-router.get("/", (req, res) => {
+router.get("/", verifyToken, (req, res) => {
   console.log("by date + class");
 
   const { className, date } = req.query;
@@ -79,7 +80,7 @@ router.get("/", (req, res) => {
 });
 
 // ✅ SAVE attendance
-router.post("/", (req, res) => {
+router.post("/", verifyToken, (req, res) => {
   const { attendanceList } = req.body;
 
   const queries = attendanceList.map((item) => {
@@ -130,7 +131,7 @@ router.post("/", (req, res) => {
 });
 
 // ✅ GET student attendance report
-router.get("/student-report", (req, res) => {
+router.get("/student-report", verifyToken, (req, res) => {
   const { className, studentId, fromDate, toDate } = req.query;
 
   // ✅ validation
@@ -183,7 +184,7 @@ router.get("/student-report", (req, res) => {
 });
 
 // ✅ RFID attendance
-router.post("/rfid", (req, res) => {
+router.post("/rfid", verifyToken, (req, res) => {
   const { rfid_uid } = req.body;
 
   if (!rfid_uid) {

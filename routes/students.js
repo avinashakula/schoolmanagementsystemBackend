@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
+const verifyToken = require("../middleware/auth");
 
 // CREATE STUDENT
-router.post("/", (req, res) => {
+router.post("/", verifyToken, (req, res) => {
   console.log("Incoming Data:", req.body); // 👈 ADD THIS
   const {
     first_name,
@@ -65,7 +66,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 });
 
 // GET ALL STUDENTS
-router.get("/", (req, res) => {
+router.get("/", verifyToken, (req, res) => {
   const sql = "SELECT * FROM students ORDER BY id DESC";
 
   db.query(sql, (err, result) => {
@@ -78,7 +79,7 @@ router.get("/", (req, res) => {
 });
 
 // UPDATE STUDENTS
-router.put("/:id", (req, res) => {
+router.put("/:id", verifyToken, (req, res) => {
   const { id } = req.params;
 
   const {
@@ -156,7 +157,7 @@ router.put("/:id", (req, res) => {
 });
 
 // GET STUDENT COUNT CLASS-WISE
-router.get("/class-wise-count", (req, res) => {
+router.get("/class-wise-count", verifyToken, (req, res) => {
   const sql = `
     SELECT class, COUNT(*) as students
     FROM students
