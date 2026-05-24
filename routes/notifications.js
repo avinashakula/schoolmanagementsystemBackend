@@ -7,6 +7,7 @@ const db = require("../db");
 const multer = require("multer");
 
 const path = require("path");
+const verifyToken = require("../middleware/auth");
 
 // ============================
 // FILE UPLOAD
@@ -30,7 +31,7 @@ const upload = multer({
 // GET ALL NOTIFICATIONS
 // ============================
 
-router.get("/", (req, res) => {
+router.get("/", verifyToken, (req, res) => {
   const sql = `
     SELECT *
     FROM notifications
@@ -52,7 +53,7 @@ router.get("/", (req, res) => {
 // CREATE NOTIFICATION
 // ============================
 
-router.post("/", upload.single("attachment"), (req, res) => {
+router.post("/", upload.single("attachment"), verifyToken, (req, res) => {
   const { category, title, description, posted_date } = req.body;
 
   const attachment = req.file ? req.file.filename : null;
@@ -91,7 +92,7 @@ router.post("/", upload.single("attachment"), (req, res) => {
 // UPDATE STATUS
 // ============================
 
-router.put("/status/:id", (req, res) => {
+router.put("/status/:id", verifyToken, (req, res) => {
   const { id } = req.params;
 
   const { status } = req.body;

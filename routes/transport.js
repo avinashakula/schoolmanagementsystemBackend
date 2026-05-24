@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
+const verifyToken = require("../middleware/auth");
 
 // ✅ GET transport + students by class
-router.get("/:className", (req, res) => {
+router.get("/:className", verifyToken, (req, res) => {
   const { className } = req.params;
 
   const sql = `
@@ -29,7 +30,7 @@ router.get("/:className", (req, res) => {
 });
 
 // ✅ SAVE / UPDATE transport
-router.post("/", (req, res) => {
+router.post("/", verifyToken, (req, res) => {
   const { transportList } = req.body;
 
   const queries = transportList.map((item) => {
