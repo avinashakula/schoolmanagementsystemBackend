@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+require("dotenv").config();
 
 const app = express();
 app.use(cors());
@@ -19,6 +20,9 @@ const busRoutes = require("./routes/buses");
 const timeTableRoutes = require("./routes/timetable");
 const notificationRoutes = require("./routes/notifications");
 const usersRoutes = require("./routes/users");
+const lessonRoutes = require("./routes/lessons");
+const questionRoutes = require("./routes/questions");
+const practicePaperRoutes = require("./routes/practicePaper");
 
 app.use("/api", authRoutes);
 app.use("/api/students", studentRoutes);
@@ -31,6 +35,9 @@ app.use("/api/buses", busRoutes);
 app.use("/api/timetable", timeTableRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/users", usersRoutes);
+app.use("/api/lessons", lessonRoutes);
+app.use("/api/questions", questionRoutes);
+app.use("/api/papers", practicePaperRoutes);
 app.listen(5000, () => {
   console.log("Server running on http://localhost:5000");
 });

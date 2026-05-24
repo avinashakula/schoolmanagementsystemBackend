@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 const bcrypt = require("bcrypt");
+const verifyToken = require("../middleware/auth");
 
 // ✅ GET users
-router.get("/", (req, res) => {
+router.get("/", verifyToken, (req, res) => {
   db.query("SELECT * FROM users ORDER BY id DESC", (err, result) => {
     if (err) {
       console.error(err);
@@ -16,7 +17,7 @@ router.get("/", (req, res) => {
 });
 
 // ✅ CREATE user
-router.post("/", async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   try {
     const {
       firstName,
@@ -84,7 +85,7 @@ router.post("/", async (req, res) => {
 });
 
 // ✅ UPDATE user
-router.put("/:id", (req, res) => {
+router.put("/:id", verifyToken, (req, res) => {
   const { id } = req.params;
 
   const {

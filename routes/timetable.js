@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
+const verifyToken = require("../middleware/auth");
 
-router.get("/class/:className", (req, res) => {
+router.get("/class/:className", verifyToken, (req, res) => {
   const sql = `
   SELECT
     t.*,
@@ -33,7 +34,7 @@ router.get("/class/:className", (req, res) => {
   });
 });
 
-router.post("/class/:className", (req, res) => {
+router.post("/class/:className", verifyToken, (req, res) => {
   const {
     class_name,
     day_name,

@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
+const verifyToken = require("../middleware/auth");
 
 // CREATE FACULTY
-router.post("/", (req, res) => {
+router.post("/", verifyToken, (req, res) => {
   const {
     firstName,
     lastName,
@@ -46,7 +47,7 @@ router.post("/", (req, res) => {
 });
 
 // GET FACULTY
-router.get("/", (req, res) => {
+router.get("/", verifyToken, (req, res) => {
   db.query("SELECT * FROM faculty ORDER BY id DESC", (err, result) => {
     if (err) return res.status(500).json(err);
     res.json(result);
